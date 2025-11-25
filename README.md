@@ -42,29 +42,31 @@ ComfyUI needs to be accessible from your n8n instance. Choose one of the followi
 
 **Example:** `https://xxxxx.vast.ai:8188` or `https://xxxxx.vast.ai?token=xxxxx`
 
-### Option B: Cloudflare Tunnel (Alternative for Other Cloud Services)
+### Option B: Cloudflare Tunnel (For Local Installations Only)
 
-**Use this when**: ComfyUI is on a cloud service that doesn't provide built-in tunneling
+> ⚠️ **Important**: Cloudflare Tunnel works for **local installations** (home network with router), but **NOT for cloud services** like vast.ai, AWS, GCP, etc. Cloud services have their own tunneling systems.
 
-1. **SSH into your instance**
-   ```bash
-   ssh root@<instance-ip>
-   ```
+**Use this when**: ComfyUI is running locally at home/office behind a router
 
-2. **Install cloudflared**
+1. **On your local machine running ComfyUI**, install cloudflared:
    ```bash
    wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
    chmod +x cloudflared-linux-amd64
    mv cloudflared-linux-amd64 /usr/local/bin/cloudflared
    ```
 
-3. **Start tunnel**
+2. **Start tunnel**
    ```bash
    cloudflared tunnel --url http://localhost:8188
    ```
 
-4. **Save the URL** (e.g., `https://xxxxx.trycloudflare.com`)
+3. **Save the URL** (e.g., `https://xxxxx.trycloudflare.com`)
    - This is your ComfyUI URL for n8n
+   - Works even without port forwarding on your router
+
+**Why it works locally but not on cloud:**
+- Local networks: You control the machine, can install cloudflared, and it creates a tunnel from your network to Cloudflare
+- Cloud services: They already have their own tunneling infrastructure (like vast.ai's built-in tunnel), and cloudflared conflicts or doesn't work in containerized environments
 
 ### Option C: Local Network Access (For Local Installations)
 
