@@ -21,11 +21,32 @@ This guide covers the complete setup to connect your n8n instance with ComfyUI r
 
 ComfyUI needs to be accessible from your n8n instance. Choose one of the following methods based on your setup:
 
-### Option A: Cloudflare Tunnel (Recommended for Cloud/Remote Access)
+### Option A: vast.ai Built-in Tunnel (Recommended for vast.ai Instances)
 
-**Use this when**: ComfyUI is on vast.ai or another cloud service
+**Use this when**: ComfyUI is running on a vast.ai instance
 
-1. **SSH into your vast.ai instance**
+**vast.ai provides automatic tunneling:**
+
+1. **When you create a vast.ai instance**, they automatically provide:
+   - A public access URL with token
+   - Automatic port forwarding to your container
+
+2. **Access your ComfyUI:**
+   - Use the URL provided by vast.ai in the instance dashboard
+   - The URL automatically routes to port 8188 (or the port you configure)
+   - No additional tunnel setup needed!
+
+3. **Find your URL:**
+   - Go to vast.ai dashboard → Your instance → "Connect" or "Access"
+   - Copy the provided URL (includes token automatically)
+
+**Example:** `https://xxxxx.vast.ai:8188` or `https://xxxxx.vast.ai?token=xxxxx`
+
+### Option B: Cloudflare Tunnel (Alternative for Other Cloud Services)
+
+**Use this when**: ComfyUI is on a cloud service that doesn't provide built-in tunneling
+
+1. **SSH into your instance**
    ```bash
    ssh root@<instance-ip>
    ```
@@ -45,7 +66,7 @@ ComfyUI needs to be accessible from your n8n instance. Choose one of the followi
 4. **Save the URL** (e.g., `https://xxxxx.trycloudflare.com`)
    - This is your ComfyUI URL for n8n
 
-### Option B: Local Network Access (For Local Installations)
+### Option C: Local Network Access (For Local Installations)
 
 **Use this when**: Both n8n and ComfyUI are on the same local network
 
@@ -64,7 +85,7 @@ ComfyUI needs to be accessible from your n8n instance. Choose one of the followi
    - Local access: `http://192.168.1.100:8188` (replace with ComfyUI machine's IP)
    - External access: `http://your-domain.com:8188` or `http://your-dynamic-dns:8188`
 
-### Option C: SSH Tunnel
+### Option D: SSH Tunnel
 
 **Use this when**: n8n is on your local machine and ComfyUI is remote
 
@@ -75,32 +96,42 @@ ssh -L 8188:localhost:8188 root@<vast-ai-instance-ip>
 
 Then use `http://localhost:8188` as your ComfyUI URL.
 
-## 🔑 Step 2: Get ComfyUI API Token
+## 🔑 Step 2: Get ComfyUI Access URL and Token
 
-> **Note**: API token is only required when using ComfyUI on cloud services (like vast.ai) or when you need secure remote access. For local installations on the same network, you can skip API authentication and just configure firewall/port forwarding.
+> **Note**: For vast.ai instances, the access URL and token are automatically generated when you create the instance. For local installations, you can skip authentication.
 
-### For Cloud/Remote Access (vast.ai, etc.)
+### For Cloud/Remote Access (vast.ai)
 
-1. **SSH into your vast.ai instance**
-   ```bash
-   ssh root@<instance-ip>
-   ```
+**vast.ai automatically provides access:**
 
-2. **Generate API token**
+1. **When you create an instance on vast.ai**, they generate:
+   - A public access URL (e.g., `https://xxxxx.vast.ai`)
+   - An access token (included in the URL or provided separately)
+
+2. **Access your instance services:**
+   - The vast.ai URL automatically tunnels to your container's services
+   - ComfyUI running on port 8188 will be accessible via the vast.ai URL
+   - The token is embedded in the URL or provided in the instance details
+
+3. **Find your access information:**
+   - Check the vast.ai dashboard for your instance
+   - Look for "Connect" or "Access" section
+   - Copy the URL and token provided
+
+4. **Start ComfyUI** (no special authentication needed - vast.ai handles it):
    ```bash
    cd ComfyUI
-   python3 -c "import secrets; print(secrets.token_urlsafe(32))"
-   ```
-
-3. **Save this token** - you'll need it for n8n configuration
-
-4. **Start ComfyUI with API authentication** (recommended for cloud instances)
-   ```bash
-   # Edit your startup script or systemd service to include the token
-   # Or use environment variables
-   export COMFYUI_API_TOKEN=your-token-here
    python3 main.py --listen 0.0.0.0 --port 8188
    ```
+   
+   The vast.ai tunnel will automatically route traffic to port 8188.
+
+**Example vast.ai URL format:**
+```
+https://xxxxx.vast.ai:port
+# or
+https://xxxxx.vast.ai?token=xxxxx
+```
 
 ### For Local Installation
 
@@ -112,22 +143,37 @@ If both n8n and ComfyUI are on the same local network:
 
 ## 🔌 Step 3: Configure n8n
 
-### 3.1. Create HTTP Bearer Auth Credential (Only for Cloud/Remote Access)
+### 3.1. Create HTTP Bearer Auth Credential (If Required)
 
-> **Note**: This step is only required if you're using ComfyUI on cloud services (vast.ai) or need secure remote access. For local installations on the same network, you can skip this step.
+> **Note**: 
+> - **For vast.ai**: The token is usually included in the URL automatically. You may not need separate Bearer Auth.
+> - **For Cloudflare Tunnel**: Usually no authentication needed.
+> - **For local installations**: Skip this step entirely.
+
+**If your ComfyUI requires authentication:**
 
 1. In n8n, go to **Credentials** → **Add Credential**
 2. Select **HTTP Bearer Auth**
-3. Enter your ComfyUI API token (from Step 2)
+3. Enter your access token:
+   - **vast.ai**: Extract token from the URL provided by vast.ai (if separate from URL)
+   - **Other services**: Use the token provided by your service
 4. Save as "ComfyUI Bearer Auth"
+
+**For vast.ai**: Check if the token is in the URL format. If the URL works without separate auth, you can skip Bearer Auth.
 
 ### 3.2. Configure Workflow
 
 1. **Import the workflow** (see [n8n ComfyUI Workflow](https://github.com/enemy100/n8n-comfyui-workflow))
 
 2. **Open "Set ComfyUI URL" node**
-   - Set `comfyBaseUrl`: Your ComfyUI URL (from Step 1)
-   - Set `comfyApiToken`: Your API token (from Step 2)
+   - Set `comfyBaseUrl`: Your ComfyUI URL
+     - **vast.ai**: Use the URL provided in the instance dashboard (e.g., `https://xxxxx.vast.ai:8188`)
+     - **Cloudflare Tunnel**: Use the tunnel URL (e.g., `https://xxxxx.trycloudflare.com`)
+     - **Local**: Use local IP (e.g., `http://192.168.1.100:8188`)
+   - Set `comfyApiToken`: 
+     - **vast.ai**: Usually included in URL, or extract from vast.ai dashboard
+     - **Other services**: Use provided token
+     - **Local**: Can be empty or a simple token if you set one
 
 3. **Update HTTP Request nodes**
    - **For cloud/remote access**: All nodes that connect to ComfyUI should use the "ComfyUI Bearer Auth" credential
@@ -208,9 +254,13 @@ ufw enable
 **Problem**: 401 Unauthorized errors
 
 **Solutions**:
-- **For cloud instances**: Verify API token is correct and set in ComfyUI startup
-- **For local installations**: If you're getting auth errors, you may not need API token - try removing Bearer Auth from n8n credentials
-- Verify Bearer Auth credential in n8n matches ComfyUI token (if using)
+- **For vast.ai**: 
+  - Verify you're using the correct URL with token from vast.ai dashboard
+  - Check if token needs to be extracted from URL or used separately
+  - Try accessing the URL directly in browser first to verify it works
+- **For other cloud services**: Verify API token is correct
+- **For local installations**: Remove Bearer Auth from n8n credentials - authentication is usually not needed
+- Verify Bearer Auth credential in n8n matches the token (if required)
 - Check ComfyUI logs for authentication errors
 - If using local network, ensure you're not requiring authentication unnecessarily
 
