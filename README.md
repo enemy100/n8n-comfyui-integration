@@ -7,12 +7,12 @@ Complete guide to integrate n8n with ComfyUI running on vast.ai for automated vi
 This guide covers the complete setup to connect your n8n instance with ComfyUI running on vast.ai, enabling automated video generation workflows.
 
 > **Related Projects**:
-> - [n8n ComfyUI Video Generation Workflow](https://github.com/YOUR_USERNAME/n8n-comfyui-workflow) - The automation workflow
-> - [ComfyUI Flux & WAN 2.2 Setup on vast.ai](https://github.com/YOUR_USERNAME/comfyui-flux-wan-vast-ai) - Infrastructure setup
+> - [n8n ComfyUI Video Generation Workflow](https://github.com/enemy100/n8n-comfyui-workflow) - The automation workflow
+> - [ComfyUI Flux & WAN 2.2 Setup on vast.ai](https://github.com/enemy100/comfyui-flux-wan-vast-ai) - Infrastructure setup
 
 ## 📋 Prerequisites
 
-1. **ComfyUI instance** running on vast.ai (see [ComfyUI Setup Guide](https://github.com/YOUR_USERNAME/comfyui-flux-wan-vast-ai))
+1. **ComfyUI instance** running on vast.ai (see [ComfyUI Setup Guide](https://github.com/enemy100/comfyui-flux-wan-vast-ai))
 2. **n8n instance** (self-hosted or cloud)
 3. **Network access** between n8n and ComfyUI
 
@@ -93,7 +93,7 @@ If both are on the same network or you've configured firewall rules:
 
 ### 3.2. Configure Workflow
 
-1. **Import the workflow** (see [n8n ComfyUI Workflow](https://github.com/YOUR_USERNAME/n8n-comfyui-workflow))
+1. **Import the workflow** (see [n8n ComfyUI Workflow](https://github.com/enemy100/n8n-comfyui-workflow))
 
 2. **Open "Set ComfyUI URL" node**
    - Set `comfyBaseUrl`: Your ComfyUI URL (from Step 1)
@@ -260,5 +260,5 @@ This guide is provided as-is for educational purposes.
 
 ---
 
-**Need Help?** Open an issue in the [n8n ComfyUI Workflow](https://github.com/YOUR_USERNAME/n8n-comfyui-workflow) repository.
+**Need Help?** Open an issue in the [n8n ComfyUI Workflow](https://github.com/enemy100/n8n-comfyui-workflow) repository.
 
