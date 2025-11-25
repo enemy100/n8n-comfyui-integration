@@ -1,0 +1,33 @@
+# Environment variables
+.env
+.env.local
+*.env
+
+# API tokens and secrets
+*.key
+*.pem
+secrets/
+tokens/
+credentials.json
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*~
+
