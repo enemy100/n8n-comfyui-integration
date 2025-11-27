@@ -37,10 +37,19 @@ ComfyUI needs to be accessible from your n8n instance. Choose one of the followi
    - No additional tunnel setup needed!
 
 3. **Find your URL:**
-   - Go to vast.ai dashboard → Your instance → "Connect" or "Access"
+   - Go to vast.ai dashboard → Your instance → "Connect" or "Access" or "Open"
    - Copy the provided URL (includes token automatically)
+  
+   <img width="1144" height="370" alt="image" src="https://github.com/user-attachments/assets/9ffce40e-4e31-4c09-b0d2-61c3f234c6b5" />
+   
+<img width="1902" height="424" alt="image" src="https://github.com/user-attachments/assets/3737fd35-e9d8-40de-88d4-f617b973672f" />
 
-**Example:** `https://xxxxx.vast.ai:8188` or `https://xxxxx.vast.ai?token=xxxxx`
+<img width="481" height="104" alt="image" src="https://github.com/user-attachments/assets/857b53d7-a1e4-4364-8903-e33a81cb3b86" />
+
+
+
+
+**Example:**  `https://xxxxx.vast.ai?token=xxxxx`
 
 ### Option B: Cloudflare Tunnel (For Local Installations Only)
 
